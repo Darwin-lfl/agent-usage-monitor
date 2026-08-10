@@ -1,5 +1,8 @@
 # Agent Usage Monitor
 
+[![CI](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/ci.yml)
+[![Release](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/release.yml/badge.svg)](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/release.yml)
+
 **本地优先的编程 Agent Token 用量监控器 / A privacy-first token usage monitor for coding agents**
 
 [中文](#中文) · [English](#english)
@@ -52,16 +55,16 @@ Agent Usage Monitor 读取各编程 Agent 保存在本机的日志或数据库�
 Release 二进制不要求用户安装 Python 或 uv。仓库正式发布后，macOS/Linux 使用：
 
 ```bash
-curl -fsSL https://github.com/<owner>/<repo>/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.sh | sh
 ```
 
 Windows PowerShell：
 
 ```powershell
-irm https://github.com/<owner>/<repo>/releases/latest/download/install.ps1 | iex
+irm https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.ps1 | iex
 ```
 
-安装器会检测操作系统和 CPU 架构、下载对应文件并校验 SHA256。发布前请将 `<owner>/<repo>` 替换为正式 GitHub 仓库地址。
+安装器会检测操作系统和 CPU 架构、下载对应文件并校验 SHA256。
 
 #### pipx
 
@@ -73,8 +76,8 @@ agent-monitor
 #### 从源码安装
 
 ```bash
-git clone https://github.com/<owner>/<repo>.git
-cd <repo>
+git clone https://github.com/Darwin-lfl/agent-usage-monitor.git
+cd agent-usage-monitor
 uv tool install -e .
 agent-monitor
 ```
@@ -265,16 +268,16 @@ Collection and aggregation stay on the user's machine. Web mode listens only on 
 Release binaries do not require Python or uv. After the repository is published, install the latest macOS or Linux release with:
 
 ```bash
-curl -fsSL https://github.com/<owner>/<repo>/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.sh | sh
 ```
 
 Windows PowerShell:
 
 ```powershell
-irm https://github.com/<owner>/<repo>/releases/latest/download/install.ps1 | iex
+irm https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.ps1 | iex
 ```
 
-The installers detect the OS and CPU architecture, download the matching artifact, and verify its SHA256 checksum. Replace `<owner>/<repo>` with the canonical repository before publishing.
+The installers detect the OS and CPU architecture, download the matching artifact, and verify its SHA256 checksum.
 
 #### pipx
 
@@ -286,8 +289,8 @@ agent-monitor
 #### From source
 
 ```bash
-git clone https://github.com/<owner>/<repo>.git
-cd <repo>
+git clone https://github.com/Darwin-lfl/agent-usage-monitor.git
+cd agent-usage-monitor
 uv tool install -e .
 agent-monitor
 ```

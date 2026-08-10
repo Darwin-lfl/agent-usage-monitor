@@ -23,21 +23,28 @@ def test_summaries_and_hour_granularity():
     events = [event("a", now, 100), event("b", now + timedelta(hours=1), 50)]
 
     periods = by_period(events, "hour")
+    expected = [
+        timestamp.astimezone().strftime("%Y-%m-%d %H:00")
+        for timestamp in (now, now + timedelta(hours=1))
+    ]
 
     assert summarize(events).usage.total == 150
-    assert list(periods) == ["2026-08-08 18:00", "2026-08-08 19:00"]
+    assert list(periods) == expected
 
 
 @pytest.mark.parametrize(
-    ("granularity", "expected"),
-    [
-        ("day", "2026-08-08"),
-        ("week", "2026-W32"),
-        ("month", "2026-08"),
-    ],
+    "granularity",
+    ["day", "week", "month"],
 )
-def test_supported_calendar_granularities(granularity, expected):
+def test_supported_calendar_granularities(granularity):
     value = datetime(2026, 8, 8, 10, tzinfo=timezone.utc)
+    local = value.astimezone()
+    iso_year, iso_week, _ = local.isocalendar()
+    expected = {
+        "day": local.strftime("%Y-%m-%d"),
+        "week": f"{iso_year}-W{iso_week:02d}",
+        "month": local.strftime("%Y-%m"),
+    }[granularity]
 
     assert list(by_period([event("a", value, 1)], granularity)) == [expected]
 

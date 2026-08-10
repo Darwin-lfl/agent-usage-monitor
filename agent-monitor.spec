@@ -6,7 +6,8 @@ root = Path(SPECPATH)
 datas = collect_data_files("agent_usage_monitor")
 datas += collect_data_files("textual")
 datas += copy_metadata("agent-usage-monitor")
-hiddenimports = collect_submodules("uvicorn")
+hiddenimports = collect_submodules("textual")
+hiddenimports += collect_submodules("uvicorn")
 
 analysis = Analysis(
     [str(root / "packaging" / "pyinstaller_entry.py")],

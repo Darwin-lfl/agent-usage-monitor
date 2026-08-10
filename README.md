@@ -1,11 +1,11 @@
 # Agent Usage Monitor
 
 [![CI](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/ci.yml)
-[![Release](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/release.yml/badge.svg)](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/release.yml)
+[![Release build](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/release.yml/badge.svg)](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/release.yml)
 
 **本地优先的编程 Agent Token 用量监控器 / A privacy-first token usage monitor for coding agents**
 
-[中文](#中文) · [English](#english)
+[中文](#中文) · [English](#english) · [最新版本 / Latest release](https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest)
 
 支持 Claude Code、Codex、OpenCode、Trae、Qoder 和 CodeBuddy。统一统计 Token、模型、时间趋势和数据源状态，同时提供交互式 TUI、浏览器仪表盘以及 JSON/CSV 输出。
 
@@ -52,7 +52,7 @@ Agent Usage Monitor 读取各编程 Agent 保存在本机的日志或数据库�
 
 #### 独立二进制（推荐）
 
-Release 二进制不要求用户安装 Python 或 uv。仓库正式发布后，macOS/Linux 使用：
+Release 二进制不要求安装 Python 或 uv。macOS/Linux 安装最新版本：
 
 ```bash
 curl -fsSL https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.sh | sh
@@ -66,12 +66,7 @@ irm https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/i
 
 安装器会检测操作系统和 CPU 架构、下载对应文件并校验 SHA256。
 
-#### pipx
-
-```bash
-pipx install agent-usage-monitor
-agent-monitor
-```
+也可以前往 [GitHub Releases](https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest) 手动下载对应操作系统和 CPU 架构的安装包。
 
 #### 从源码安装
 
@@ -265,7 +260,7 @@ Collection and aggregation stay on the user's machine. Web mode listens only on 
 
 #### Standalone binary (recommended)
 
-Release binaries do not require Python or uv. After the repository is published, install the latest macOS or Linux release with:
+Release binaries do not require Python or uv. Install the latest macOS or Linux release with:
 
 ```bash
 curl -fsSL https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.sh | sh
@@ -279,12 +274,7 @@ irm https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/i
 
 The installers detect the OS and CPU architecture, download the matching artifact, and verify its SHA256 checksum.
 
-#### pipx
-
-```bash
-pipx install agent-usage-monitor
-agent-monitor
-```
+You can also download the package for your operating system and CPU architecture from [GitHub Releases](https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest).
 
 #### From source
 

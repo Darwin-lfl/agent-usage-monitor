@@ -1,0 +1,160 @@
+name: Release binaries
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  frontend:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+        working-directory: web
+      - run: npm run build
+        working-directory: web
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: src/agent_usage_monitor/web_dist
+
+  build:
+    needs: frontend
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            asset: agent-monitor-macos-arm64
+            archive: tar
+          - runner: macos-15-intel
+            asset: agent-monitor-macos-x86_64
+            archive: tar
+          - runner: ubuntu-22.04
+            asset: agent-monitor-linux-x86_64
+            archive: tar
+          - runner: ubuntu-22.04-arm
+            asset: agent-monitor-linux-arm64
+            archive: tar
+          - runner: windows-2025
+            asset: agent-monitor-windows-x86_64
+            archive: zip
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: src/agent_usage_monitor/web_dist
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --frozen --extra dev
+      - run: uv run pytest
+      - run: uv run pyinstaller --clean --noconfirm agent-monitor.spec
+
+      - name: Sign and notarize macOS binary
+        if: runner.os == 'macOS'
+        env:
+          APPLE_CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        shell: bash
+        run: |
+          if [ -z "$APPLE_CERTIFICATE_P12" ]; then
+            echo "Apple signing secrets are not configured; producing an unsigned build."
+            exit 0
+          fi
+          keychain="$RUNNER_TEMP/agent-monitor.keychain-db"
+          certificate="$RUNNER_TEMP/certificate.p12"
+          echo "$APPLE_CERTIFICATE_P12" | base64 --decode > "$certificate"
+          security create-keychain -p actions "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p actions "$keychain"
+          security import "$certificate" -P "$APPLE_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$keychain"
+          security list-keychains -d user -s "$keychain" login.keychain-db
+          identity="$(security find-identity -v -p codesigning "$keychain" | awk 'NR==1 {print $2}')"
+          codesign --force --options runtime --timestamp --sign "$identity" dist/agent-monitor
+          ditto -c -k --keepParent dist/agent-monitor "$RUNNER_TEMP/notarize.zip"
+          xcrun notarytool submit "$RUNNER_TEMP/notarize.zip" --apple-id "$APPLE_ID" --password "$APPLE_APP_PASSWORD" --team-id "$APPLE_TEAM_ID" --wait
+
+      - name: Sign Windows binary
+        if: runner.os == 'Windows'
+        env:
+          WINDOWS_CERTIFICATE_PFX: ${{ secrets.WINDOWS_CERTIFICATE_PFX }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        shell: pwsh
+        run: |
+          if (-not $env:WINDOWS_CERTIFICATE_PFX) {
+            Write-Host "Windows signing secrets are not configured; producing an unsigned build."
+            exit 0
+          }
+          $certificate = Join-Path $env:RUNNER_TEMP "certificate.pfx"
+          [IO.File]::WriteAllBytes($certificate, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_PFX))
+          & signtool sign /fd SHA256 /td SHA256 /tr http://timestamp.digicert.com /f $certificate /p $env:WINDOWS_CERTIFICATE_PASSWORD dist/agent-monitor.exe
+
+      - name: Smoke test version
+        if: runner.os != 'Windows'
+        run: ./dist/agent-monitor --version
+      - name: Smoke test version (Windows)
+        if: runner.os == 'Windows'
+        run: .\dist\agent-monitor.exe --version
+
+      - name: Create tar archive
+        if: matrix.archive == 'tar'
+        shell: bash
+        run: tar -C dist -czf "${{ matrix.asset }}.tar.gz" agent-monitor
+      - name: Create zip archive
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: Compress-Archive -Path dist/agent-monitor.exe -DestinationPath "${{ matrix.asset }}.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.asset }}
+          path: ${{ matrix.asset }}.*
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: release
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: src/agent_usage_monitor/web_dist
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m pip install build
+      - run: python -m build
+      - name: Stage installers and checksums
+        run: |
+          sed "s|__REPOSITORY__|$GITHUB_REPOSITORY|g" scripts/install.sh > release/install.sh
+          sed "s|__REPOSITORY__|$GITHUB_REPOSITORY|g" scripts/install.ps1 > release/install.ps1
+          cp dist/* release/
+          cd release
+          sha256sum agent-monitor-* agent_usage_monitor-* > SHA256SUMS
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" release/* --generate-notes --verify-tag

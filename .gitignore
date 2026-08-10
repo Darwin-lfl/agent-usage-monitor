@@ -1,0 +1,14 @@
+.venv/
+.uv-cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.agent-usage-monitor/
+web/node_modules/
+web/*.tsbuildinfo

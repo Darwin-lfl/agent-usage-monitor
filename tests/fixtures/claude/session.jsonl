@@ -1,0 +1,1 @@
+{"timestamp":"2026-08-08T10:00:00Z","sessionId":"fixture-session","cwd":"/fixture/project","requestId":"fixture-request","message":{"id":"fixture-message","model":"claude-sonnet-4-5","usage":{"input_tokens":100,"output_tokens":20,"cache_read_input_tokens":50,"cache_creation_input_tokens":10}}}

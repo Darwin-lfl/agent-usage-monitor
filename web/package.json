@@ -1,0 +1,21 @@
+{
+  "name": "agent-usage-monitor-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "dev": "vite",
+    "typecheck": "tsc -b --pretty false"
+  },
+  "dependencies": {
+    "echarts": "^6.0.0",
+    "lucide-preact": "^0.468.0",
+    "preact": "^10.25.4"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.1",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}

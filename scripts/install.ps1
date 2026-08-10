@@ -5,7 +5,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-if ($Repository -eq "__REPOSITORY__") {
+if ($Repository -notmatch "^[^/]+/[^/]+$") {
     throw "Installer has not been stamped. Set AGENT_MONITOR_REPOSITORY=owner/repository and retry."
 }
 if (-not [Environment]::Is64BitOperatingSystem) {

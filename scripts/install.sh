@@ -5,11 +5,14 @@ REPOSITORY="${AGENT_MONITOR_REPOSITORY:-__REPOSITORY__}"
 INSTALL_DIR="${AGENT_MONITOR_INSTALL_DIR:-$HOME/.local/bin}"
 VERSION="${AGENT_MONITOR_VERSION:-latest}"
 
-if [ "$REPOSITORY" = "__REPOSITORY__" ]; then
+case "$REPOSITORY" in
+  */*) ;;
+  *)
   echo "Installer has not been stamped with a GitHub repository." >&2
   echo "Set AGENT_MONITOR_REPOSITORY=owner/repository and retry." >&2
   exit 1
-fi
+  ;;
+esac
 
 case "$(uname -s)" in
   Darwin) platform="macos" ;;

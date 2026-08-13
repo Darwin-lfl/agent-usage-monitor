@@ -1,11 +1,11 @@
 # Agent Usage Monitor
 
-[![CI](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/ci.yml)
-[![Release build](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/release.yml/badge.svg)](https://github.com/Darwin-lfl/agent-usage-monitor/actions/workflows/release.yml)
+[![CI](https://github.com/darwin-lau/agent-usage-monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/darwin-lau/agent-usage-monitor/actions/workflows/ci.yml)
+[![Release build](https://github.com/darwin-lau/agent-usage-monitor/actions/workflows/release.yml/badge.svg)](https://github.com/darwin-lau/agent-usage-monitor/actions/workflows/release.yml)
 
 **本地优先的编程 Agent Token 用量监控器 / A privacy-first token usage monitor for coding agents**
 
-[中文](#中文) · [English](#english) · [最新版本 / Latest release](https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest)
+[中文](#中文) · [English](#english) · [最新版本 / Latest release](https://github.com/darwin-lau/agent-usage-monitor/releases/latest)
 
 支持 Claude Code、Codex、OpenCode、Trae、Qoder 和 CodeBuddy。统一统计 Token、模型、时间趋势和数据源状态，同时提供交互式 TUI、浏览器仪表盘以及 JSON/CSV 输出。
 
@@ -55,23 +55,23 @@ Agent Usage Monitor 读取各编程 Agent 保存在本机的日志或数据库�
 Release 二进制不要求安装 Python 或 uv。macOS/Linux 安装最新版本：
 
 ```bash
-curl -fsSL https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/darwin-lau/agent-usage-monitor/releases/latest/download/install.sh | sh
 ```
 
 Windows PowerShell：
 
 ```powershell
-irm https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.ps1 | iex
+irm https://github.com/darwin-lau/agent-usage-monitor/releases/latest/download/install.ps1 | iex
 ```
 
 安装器会检测操作系统和 CPU 架构、下载对应文件并校验 SHA256。
 
-也可以前往 [GitHub Releases](https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest) 手动下载对应操作系统和 CPU 架构的安装包。
+也可以前往 [GitHub Releases](https://github.com/darwin-lau/agent-usage-monitor/releases/latest) 手动下载对应操作系统和 CPU 架构的安装包。
 
 #### 从源码安装
 
 ```bash
-git clone https://github.com/Darwin-lfl/agent-usage-monitor.git
+git clone https://github.com/darwin-lau/agent-usage-monitor.git
 cd agent-usage-monitor
 uv tool install -e .
 agent-monitor
@@ -263,23 +263,23 @@ Collection and aggregation stay on the user's machine. Web mode listens only on 
 Release binaries do not require Python or uv. Install the latest macOS or Linux release with:
 
 ```bash
-curl -fsSL https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/darwin-lau/agent-usage-monitor/releases/latest/download/install.sh | sh
 ```
 
 Windows PowerShell:
 
 ```powershell
-irm https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest/download/install.ps1 | iex
+irm https://github.com/darwin-lau/agent-usage-monitor/releases/latest/download/install.ps1 | iex
 ```
 
 The installers detect the OS and CPU architecture, download the matching artifact, and verify its SHA256 checksum.
 
-You can also download the package for your operating system and CPU architecture from [GitHub Releases](https://github.com/Darwin-lfl/agent-usage-monitor/releases/latest).
+You can also download the package for your operating system and CPU architecture from [GitHub Releases](https://github.com/darwin-lau/agent-usage-monitor/releases/latest).
 
 #### From source
 
 ```bash
-git clone https://github.com/Darwin-lfl/agent-usage-monitor.git
+git clone https://github.com/darwin-lau/agent-usage-monitor.git
 cd agent-usage-monitor
 uv tool install -e .
 agent-monitor
